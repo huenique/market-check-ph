@@ -9,7 +9,7 @@ public:
 	const cpr::Url c_psei_endpoint = cpr::Url{ "http://phisix-api.appspot.com/stocks" };
 
 	/* Perform get request */
-	std::string get(cpr::Url urlPath) {
+	std::string get(cpr::Url const& urlPath) {
 		cpr::Response resp = cpr::Get(urlPath);
 		return resp.text;
 	}
@@ -34,7 +34,7 @@ public:
 	}
 
 	/* Get stock quote for the specified stock.*/
-	std::string fetchStock(std::string stockSym, std::string date = "")
+	std::string fetchStock(std::string const& stockSym, std::string date = "")
 	{
 		cpr::Url urlPath;
 		if (!date.empty())
