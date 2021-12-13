@@ -4,12 +4,14 @@
 
 #include "requests.hpp"
 
-class CryptoData : public Http {
+class CryptoData : public Http
+{
 protected:
-	const cpr::Url& c_crypto_endpoint = cpr::Url{ "https://data.messari.io/api/v1/assets" };
+	const cpr::Url &c_crypto_endpoint = cpr::Url{"https://data.messari.io/api/v1/assets"};
+
 public:
 	std::string GetMetrics(std::string symbol)
 	{
-		return Get(c_crypto_endpoint + cpr::Url{ "/" + symbol + "/metrics" });
+		return Get(c_crypto_endpoint + cpr::Url{"/" + symbol + "/metrics"});
 	}
 };

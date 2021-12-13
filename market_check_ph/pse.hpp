@@ -4,11 +4,13 @@
 
 #include "requests.hpp"
 
-class PseData : public Http {
+class PseData : public Http
+{
 protected:
-	const std::string& c_format_json = ".json";
-	const cpr::Url& c_pse_endpoint = cpr::Url{ "http://pseapi.com/api/" };
-	const cpr::Url& c_psei_endpoint = cpr::Url{ "http://phisix-api.appspot.com/stocks" };
+	const std::string &c_format_json = ".json";
+	const cpr::Url &c_pse_endpoint = cpr::Url{"http://pseapi.com/api/"};
+	const cpr::Url &c_psei_endpoint = cpr::Url{"http://phisix-api.appspot.com/stocks"};
+
 public:
 	/* Parse chucks of data. */
 	std::string FetchBigData(
@@ -19,7 +21,8 @@ public:
 	{
 		cpr::Url endpoint = c_pse_endpoint + cpr::Url(dir);
 		cpr::Url urlPath;
-		if (!date.empty() && (from.empty() || to.empty())) {
+		if (!date.empty() && (from.empty() || to.empty()))
+		{
 			urlPath = endpoint + cpr::Url(date);
 		}
 		else if (date.empty() && (!from.empty() && !to.empty()))
@@ -30,7 +33,7 @@ public:
 	}
 
 	/* Get stock quote for the specified stock.*/
-	std::string FetchStock(std::string const& stockSym, std::string date = "")
+	std::string FetchStock(std::string const &stockSym, std::string date = "")
 	{
 		cpr::Url urlPath;
 		if (!date.empty())
@@ -60,7 +63,7 @@ public:
 	}
 
 	/* Get sectoral summary. */
-	std::string fetchSector(
+	std::string FetchSector(
 		std::string date = "",
 		std::string from = "",
 		std::string to = "")
