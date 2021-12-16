@@ -3,9 +3,11 @@
 #include <iostream>
 #include <iomanip>
 #include <stdlib.h>
+#include <vector>
 #include <windows.h>
 
 #include "crypto.hpp"
+#include "forex.hpp"
 #include "json.hpp"
 #include "pse.hpp"
 #include "requests.hpp"
@@ -14,6 +16,7 @@ using json = nlohmann::json;
 
 PseData pse;
 CryptoData crypto;
+ForexData forex;
 Http http;
 
 void gotoxy(int x, int y)
@@ -166,10 +169,71 @@ void DrawPseView()
         gotoxy(70, 6);
         std::cout << "> Percent Change: " << change;
         gotoxy(70, 7);
-        std::cout << ">Volume: " << volume;
+        std::cout << "> Volume: " << volume;
 
         gotoxy(20, 3);
         std::cout << "Query another currency? [y/n]: ";
+        std::cin >> cont;
+        if (cont != "y" && cont != "Y")
+        {
+            break;
+        }
+    }
+}
+
+void DrawForexView()
+{
+    std::string cont;
+
+    while (1)
+    {
+        std::string currency;
+        std::vector<std::string> toQuote;
+
+        system("cls");
+
+        while (1)
+        {
+
+            // Clean up line
+            gotoxy(20, 2);
+            std::cout << "                                            ";
+
+            gotoxy(20, 2);
+            std::cout << "Enter currency (e.g. PHP), 'x' to stop: ";
+            std::cin >> currency;
+
+            if (currency == "x")
+                break;
+
+            toQuote.push_back(currency);
+            gotoxy(68, 2);
+            std::cout << "|";
+            gotoxy(70, 2);
+            for (std::string currency : toQuote)
+                std::cout << currency << " ";
+        }
+
+        // Convert vector to string with delimiter ","
+        std::string currencies = std::accumulate(std::begin(toQuote), std::end(toQuote), std::string(),
+                                                 [](std::string &ss, std::string &s)
+                                                 {
+                                                     return ss.empty() ? s : ss + "," + s;
+                                                 });
+
+        json data = json::parse(forex.GetLive(currencies));
+        json quotes = data["quotes"];
+
+        for (int i = 0; i < toQuote.size(); i++)
+        {
+            gotoxy(68, 2);
+            std::cout << "|";
+            gotoxy(70, 3 + i);
+            std::cout << "USD/" + toQuote[i] + " -> " << quotes["USD" + toQuote[i]] << std::endl;
+        }
+
+        gotoxy(20, 3);
+        std::cout << "Query another pair? [y/n]: ";
         std::cin >> cont;
         if (cont != "y" && cont != "Y")
         {
@@ -198,6 +262,10 @@ void DrawInterface()
         else if (choice == 2)
         {
             DrawCryptoView();
+        }
+        else if (choice == 3)
+        {
+            DrawForexView();
         }
         else
         {
